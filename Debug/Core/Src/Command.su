@@ -1,0 +1,12 @@
+gthr-default.h:229:1:int __gthread_key_delete(__gthread_key_t)	16	static
+cnsl_tools.hpp:80:13:void startUART()	8	static
+cnsl_tools.hpp:86:13:void println(std::string)	32	static
+cnsl_tools.hpp:98:13:void print(std::string)	32	static
+cnsl_tools.hpp:107:20:std::string bfrspc(std::string)	24	static
+cnsl_tools.hpp:118:20:std::string aftspc(std::string)	40	static
+Command.cpp:10:1:command::command(std::string, bool (*)(), bool (*)(std::string&))	24	static
+Command.cpp:17:1:command::command(std::string, bool (Task::*)(), bool (Task::*)(std::string&))	24	static
+Command.cpp:24:1:command::~command()	16	static
+Command.cpp:27:1:void __static_initialization_and_destruction_0(int, int)	24	static
+Command.cpp:27:1:cpp)	8	static
+Command.cpp:27:1:cpp)	8	static

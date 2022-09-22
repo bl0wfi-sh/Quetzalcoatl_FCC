@@ -1,0 +1,16 @@
+gthr-default.h:229:1:int __gthread_key_delete(__gthread_key_t)	16	static
+cnsl_tools.hpp:80:13:void startUART()	8	static
+cnsl_tools.hpp:86:13:void println(std::string)	32	static
+cnsl_tools.hpp:98:13:void print(std::string)	32	static
+cnsl_tools.hpp:107:20:std::string bfrspc(std::string)	24	static
+cnsl_tools.hpp:118:20:std::string aftspc(std::string)	40	static
+Task.hpp:56:15:virtual bool Task::taskFunction()	16	static
+Task.hpp:62:15:virtual bool Task::consoleFunca()	48	static
+Task.hpp:68:15:virtual bool Task::consoleFuncb(std::string&)	48	static
+Task.hpp:14:7:Task::~Task()	16	static
+BlinkLEDTask.cpp:10:1:BlinkTask::BlinkTask(float, float, float, char, std::string)	64	static
+BlinkLEDTask.cpp:19:1:BlinkTask::~BlinkTask()	16	static
+BlinkLEDTask.cpp:24:6:virtual bool BlinkTask::taskFunction()	16	static
+BlinkLEDTask.cpp:28:1:void __static_initialization_and_destruction_0(int, int)	24	static
+BlinkLEDTask.cpp:28:1:cpp)	8	static
+BlinkLEDTask.cpp:28:1:cpp)	8	static

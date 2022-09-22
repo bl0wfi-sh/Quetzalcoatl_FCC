@@ -1,0 +1,19 @@
+gthr-default.h:229:1:int __gthread_key_delete(__gthread_key_t)	16	static
+cnsl_tools.hpp:80:13:void startUART()	8	static
+cnsl_tools.hpp:86:13:void println(std::string)	32	static
+cnsl_tools.hpp:98:13:void print(std::string)	32	static
+cnsl_tools.hpp:107:20:std::string bfrspc(std::string)	24	static
+cnsl_tools.hpp:118:20:std::string aftspc(std::string)	40	static
+Task.hpp:75:6:int Task::getState()	16	static
+Task.hpp:76:7:void Task::setState(int)	16	static
+Task.hpp:80:16:long unsigned int Task::getDelay()	16	static
+Task.hpp:81:7:void Task::setDelay(long unsigned int)	16	static
+Task.hpp:83:16:long unsigned int Task::getPeriod()	16	static
+TaskMaster.cpp:13:6:void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef*)	16	static
+TaskMaster.hpp:64:1:TaskMaster<N>::TaskMaster() [with int N = 10]	16	static
+TaskMaster.hpp:38:21:TIM_HandleTypeDef* TaskMaster<N>::getTimerInst() [with int N = 10]	16	static
+TaskMaster.hpp:77:6:void TaskMaster<N>::update() [with int N = 10]	32	static
+TaskMaster.cpp:20:1:void __static_initialization_and_destruction_0(int, int)	24	static
+TaskMaster.hpp:70:1:TaskMaster<N>::~TaskMaster() [with int N = 10]	16	static
+TaskMaster.cpp:20:1:cpp)	8	static
+TaskMaster.cpp:20:1:cpp)	8	static
