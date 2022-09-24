@@ -41,14 +41,20 @@ bool BattMon::consoleFuncb(std::string& s)
 	// Check argument string.
 	if (s == "status")
 	{
-		println("Lipo Pack Units - [Volts]");
-		println("Lipo Pack Frmt  - [c1, c2, c3, c4, total]");
-		println("Lipo Pack Data  - " +
-				std::to_string(cell_voltages.cell1) + " " +
-				std::to_string(cell_voltages.cell2) + " " +
-				std::to_string(cell_voltages.cell3) + " " +
-				std::to_string(cell_voltages.cell4) + " " +
-				std::to_string(pack_volt));
+		if (!batt_msg_pntr->locked)
+		{
+			println("Lipo Pack Units - [Volts]");
+			println("Lipo Pack Frmt  - [c1, c2, c3, c4, total]");
+			println("Lipo Pack Data  - " +
+					std::to_string(batt_msg_pntr->cell1) + " " +
+					std::to_string(batt_msg_pntr->cell2) + " " +
+					std::to_string(batt_msg_pntr->cell3) + " " +
+					std::to_string(batt_msg_pntr->cell4) + " " +
+					std::to_string(batt_msg_pntr->pack_volt));
+		}else{
+			println("Shared memory locked!");
+		}
+
 	}else{
 		println("Invalid parameter!");
 		consoleFunca();
@@ -60,12 +66,15 @@ bool BattMon::consoleFuncb(std::string& s)
 
 bool BattMon::taskFunction()
 {
-	// Read all cells.
-	readCell1();
-	readCell2();
-	readCell3();
-	readCell4();
-	pack_volt = cell_voltages.cell4 + cell_voltages.cell3 + cell_voltages.cell2 + cell_voltages.cell1;
+	// Read all cells, lock shared memory.
+	batt_msg_pntr->locked = true;
+	batt_msg_pntr->cell1 = readCell1();
+	batt_msg_pntr->cell2 = readCell2() - batt_msg_pntr->cell1;
+	batt_msg_pntr->cell3 = readCell3() - batt_msg_pntr->cell2 - batt_msg_pntr->cell1;
+	batt_msg_pntr->pack_volt = readCell4();
+	batt_msg_pntr->cell4 = batt_msg_pntr->pack_volt - batt_msg_pntr->cell3 - batt_msg_pntr->cell2 - batt_msg_pntr->cell1;
+	batt_msg_pntr->locked = false;
+
 	return true;
 }
 
@@ -121,41 +130,39 @@ void BattMon::setupCell4()
 	}
 }
 
-void BattMon::readCell1()
+float BattMon::readCell1()
 {
 	setupCell1();
 	HAL_ADC_Start(hadc);
 	HAL_ADC_PollForConversion(hadc, 1000);
-	cell_voltages.cell1 = ((float)HAL_ADC_GetValue(hadc) * 3.3f * (CELL1_R1 + CELL1_R2)) / (CELL1_R2 * 4096.0f);
 	HAL_ADC_Stop(hadc);
+	return ((float)HAL_ADC_GetValue(hadc) * 3.3f * (CELL1_R1 + CELL1_R2)) / (CELL1_R2 * 4096.0f);
+
 }
 
-void BattMon::readCell2()
+float BattMon::readCell2()
 {
 	setupCell2();
 	HAL_ADC_Start(hadc);
 	HAL_ADC_PollForConversion(hadc, 1000);
-	cell_voltages.cell2 = ((float)HAL_ADC_GetValue(hadc) * 3.3f * (CELL2_R1 + CELL2_R2)) / (CELL2_R2 * 4096.0f);
-	cell_voltages.cell2 -= cell_voltages.cell1;
 	HAL_ADC_Stop(hadc);
+	return ((float)HAL_ADC_GetValue(hadc) * 3.3f * (CELL2_R1 + CELL2_R2)) / (CELL2_R2 * 4096.0f);
 }
 
-void BattMon::readCell3()
+float BattMon::readCell3()
 {
 	setupCell3();
 	HAL_ADC_Start(hadc);
 	HAL_ADC_PollForConversion(hadc, 1000);
-	cell_voltages.cell3 = ((float)HAL_ADC_GetValue(hadc) * 3.3f * (CELL3_R1 + CELL3_R2)) / (CELL3_R2 * 4096.0f);
-	cell_voltages.cell3 -= cell_voltages.cell2 + cell_voltages.cell1;
 	HAL_ADC_Stop(hadc);
+	return ((float)HAL_ADC_GetValue(hadc) * 3.3f * (CELL3_R1 + CELL3_R2)) / (CELL3_R2 * 4096.0f);
 }
 
-void BattMon::readCell4()
+float BattMon::readCell4()
 {
 	setupCell4();
 	HAL_ADC_Start(hadc);
 	HAL_ADC_PollForConversion(hadc, 1000);
-	cell_voltages.cell4 = ((float)HAL_ADC_GetValue(hadc) * 3.3f * (CELL4_R1 + CELL4_R2)) / (CELL4_R2 * 4096.0f);
-	cell_voltages.cell4 -= cell_voltages.cell3 + cell_voltages.cell2 + cell_voltages.cell1;
 	HAL_ADC_Stop(hadc);
+	return ((float)HAL_ADC_GetValue(hadc) * 3.3f * (CELL4_R1 + CELL4_R2)) / (CELL4_R2 * 4096.0f);
 }

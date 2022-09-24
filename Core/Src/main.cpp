@@ -29,6 +29,8 @@
 #include "BMI088Driver.hpp"
 #include "BatteryMon.hpp"
 #include "Console.hpp"
+#include "Telem_out.hpp"
+#include "uTopics.hpp"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -80,6 +82,8 @@ static void MX_DMA_Init(void);
 static void MX_TIM5_Init(void);
 /* USER CODE BEGIN PFP */
 
+
+// Printf() function calls will be serviced by USB interface.
 extern "C" int _write(int file, char *ptr, int len) {
     CDC_Transmit_FS((uint8_t *)ptr, len);
     return len;
@@ -155,6 +159,10 @@ int main(void)
   bmon.init(&hadc1);
   scheduler.push_back( &bmon );
 
+  // Adding Telemetry Out process...
+  TelemOut to(0.0f, 0.01f, .00001f, 0, "telem_out");	// 100Hz
+  scheduler.push_back( &to );
+
   scheduler.start();
 
   // Singleton console object used in parallel with task scheduler. This allows console to restart scheduler if needed.
@@ -162,6 +170,8 @@ int main(void)
   cs.addCommandByTask(&blink);
   cs.addCommandByTask(&bm);
   cs.addCommandByTask(&bmon);
+  cs.addCommandByTask(&to);
+
   // This starts the console app.
   cs.start();
 

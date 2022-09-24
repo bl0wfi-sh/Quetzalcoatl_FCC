@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include "Task.hpp"
 #include "main.h"
+#include "uTopics.hpp"
 
 #define BMI088_ACC_ADDRESS          0x18
 
@@ -133,7 +134,6 @@ enum gyro_power_type_t { // power mode
     GYRO_DEEP_SUSPEND = 0x20, //
 };
 
-
 class BMI088 : public Task
 {
 public:
@@ -175,8 +175,10 @@ public:
 
 	void calibrateGyro(int count);
 
+	// Callback function to execute by master scheduler
 	virtual bool taskFunction();
 
+	// Callback functions to execute on console request.
 	virtual bool consoleFunca();
 	virtual bool consoleFuncb(std::string& s);
 
@@ -198,43 +200,7 @@ private:
 
 	FMPI2C_HandleTypeDef* i2c;
 
-	struct
-	{
-		union
-		{
-			struct
-			{
-				float gx;
-				float gy;
-				float gz;
-			};
-
-			struct
-			{
-				float gyros[3];
-			};
-		};
-	}gyroData;
-
-	struct
-	{
-		union
-		{
-			struct
-			{
-				float ax;
-				float ay;
-				float az;
-			};
-
-			struct
-			{
-				float accels[3];
-			};
-		};
-	}accelData;
-
-	uint16_t temp;
+	imu_msg_struct* imu_msg_pntr = &sys_imu_topic;
 };
 
 

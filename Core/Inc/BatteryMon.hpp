@@ -11,6 +11,7 @@
 #include "main.h"
 #include <stdio.h>
 #include "Task.hpp"
+#include "uTopics.hpp"
 
 // All of these resistor values are in killo ohms.
 #define CELL1_R1	100.0f
@@ -41,35 +42,15 @@ public:
 	void setupCell4();
 
 	// Utility functions to read cells.
-	void readCell1();
-	void readCell2();
-	void readCell3();
-	void readCell4();
+	float readCell1();
+	float readCell2();
+	float readCell3();
+	float readCell4();
 
 private:
 
 	ADC_HandleTypeDef* hadc;
-	float pack_volt = 0.0f;
-	struct
-	{
-		union
-		{
-			struct
-			{
-				float cell1;
-				float cell2;
-				float cell3;
-				float cell4;
-			};
-
-			struct
-			{
-				float voltages[4];
-			};
-		};
-
-	}cell_voltages;
-
+	batt_msg_struct* batt_msg_pntr = &sys_batt_topic;
 };
 
 

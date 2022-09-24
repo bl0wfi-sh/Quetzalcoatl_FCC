@@ -1,6 +1,5 @@
-Core/Src/BMI088Driver.o: ../Core/Src/BMI088Driver.cpp \
- ../Core/Inc/BMI088Driver.hpp ../Core/Inc/Task.hpp \
- ../Core/Inc/cnsl_tools.hpp ../Core/Inc/main.h \
+Core/Src/Telem_out.o: ../Core/Src/Telem_out.cpp ../Core/Inc/Telem_out.hpp \
+ ../Core/Inc/Task.hpp ../Core/Inc/cnsl_tools.hpp ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -43,7 +42,7 @@ Core/Src/BMI088Driver.o: ../Core/Src/BMI088Driver.cpp \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_fmpi2c_ex.h \
  ../Core/Inc/uTopics.hpp
 
-../Core/Inc/BMI088Driver.hpp:
+../Core/Inc/Telem_out.hpp:
 
 ../Core/Inc/Task.hpp:
 

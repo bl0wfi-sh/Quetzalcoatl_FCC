@@ -35,16 +35,23 @@ bool BMI088::consoleFuncb(std::string& s)
 	// Check argument string.
 	if (s == "status")
 	{
-		println("BMI088 Units - [rads, m/s^2, C]");
-		println("BMI088 Frmt  - [gx, gy, gz, ax, ay, az, temp]");
-		println("BMI088 Data  - " +
-				std::to_string(gyroData.gx) + " " +
-				std::to_string(gyroData.gy) + " " +
-				std::to_string(gyroData.gz) + " " +
-				std::to_string(accelData.ax) + " " +
-				std::to_string(accelData.ay) + " " +
-				std::to_string(accelData.az) + " " +
-				std::to_string(temp));
+
+		if (!imu_msg_pntr->locked)
+		{
+			println("BMI088 Units - [rads, m/s^2, C]");
+			println("BMI088 Frmt  - [gx, gy, gz, ax, ay, az, temp]");
+			println("BMI088 Data  - " +
+					std::to_string(imu_msg_pntr->gx) + " " +
+					std::to_string(imu_msg_pntr->gy) + " " +
+					std::to_string(imu_msg_pntr->gz) + " " +
+					std::to_string(imu_msg_pntr->ax) + " " +
+					std::to_string(imu_msg_pntr->ay) + " " +
+					std::to_string(imu_msg_pntr->az) + " " +
+					std::to_string(imu_msg_pntr->temp));
+		}else{
+			println("Shared memory locked!");
+		}
+
 	}else{
 		println("Invalid parameter!");
 		consoleFunca();
@@ -56,9 +63,11 @@ bool BMI088::consoleFuncb(std::string& s)
 
 bool BMI088::taskFunction()
 {
-	getGyroscope(&gyroData.gx, &gyroData.gy, &gyroData.gz);
-	getAcceleration(&accelData.ax, &accelData.ay, &accelData.az);
-	temp = getTemperature();
+	imu_msg_pntr->locked = true;			// Lock the shared memory while writting to it.
+	getGyroscope(imu_msg_pntr->gyros, imu_msg_pntr->gyros + 1, imu_msg_pntr->gyros + 2);
+	getAcceleration(imu_msg_pntr->accels, imu_msg_pntr->accels + 1, imu_msg_pntr->accels + 2);
+	imu_msg_pntr->temp = getTemperature();
+	imu_msg_pntr->locked = false;			// Un-lock the shared memory while writting to it.
 	return true;
 }
 
@@ -264,10 +273,10 @@ void BMI088::getGyroscope(float* x, float* y, float* z) {
     *x = (gyroRange * value / 32768) - gcal_x;
 
     value = (int16_t)gy;
-    *y = (gyroRange * value / 32768) - gcal_y;
+    *y = -(gyroRange * value / 32768) - gcal_y;
 
     value = (int16_t)gz;
-    *z = (gyroRange * value / 32768) - gcal_z;
+    *z = -(gyroRange * value / 32768) - gcal_z;
 }
 
 float BMI088::getGyroscopeX(void) {
@@ -291,7 +300,7 @@ float BMI088::getGyroscopeY(void) {
     value = (int16_t)gy;
     value = (gyroRange * value / 32768) - gcal_y;
 
-    return value;
+    return value * -1.0f;
 }
 
 float BMI088::getGyroscopeZ(void) {
@@ -303,7 +312,7 @@ float BMI088::getGyroscopeZ(void) {
     value = (int16_t)gz;
     value = (gyroRange * value / 32768) - gcal_z;
 
-    return value;
+    return value * -1.0f;
 }
 
 int16_t BMI088::getTemperature(void) {

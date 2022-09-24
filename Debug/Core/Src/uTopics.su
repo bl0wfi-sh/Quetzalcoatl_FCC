@@ -1,0 +1,4 @@
+uTopics.hpp:15:8:imu_msg::imu_msg()	16	static
+uTopics.hpp:56:8:batt_msg::batt_msg()	16	static
+uTopics.cpp:11:31:void __static_initialization_and_destruction_0(int, int)	16	static
+uTopics.cpp:11:31:cpp)	8	static

@@ -40,7 +40,7 @@ Core/Src/BatteryMon.o: ../Core/Src/BatteryMon.cpp \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_fmpi2c.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_fmpi2c_ex.h \
- ../Core/Inc/Task.hpp ../Core/Inc/cnsl_tools.hpp
+ ../Core/Inc/Task.hpp ../Core/Inc/cnsl_tools.hpp ../Core/Inc/uTopics.hpp
 
 ../Core/Inc/BatteryMon.hpp:
 
@@ -129,3 +129,5 @@ Core/Src/BatteryMon.o: ../Core/Src/BatteryMon.cpp \
 ../Core/Inc/Task.hpp:
 
 ../Core/Inc/cnsl_tools.hpp:
+
+../Core/Inc/uTopics.hpp:
