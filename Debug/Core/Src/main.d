@@ -45,9 +45,10 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
  ../Core/Inc/TaskMaster.hpp ../Core/Inc/main.h ../Core/Inc/stm32f4xx_it.h \
  ../Core/Inc/Task.hpp ../Core/Inc/cnsl_tools.hpp \
  ../Core/Inc/BlinkLEDTask.hpp ../Core/Inc/BMI088Driver.hpp \
- ../Core/Inc/uTopics.hpp ../Core/Inc/BatteryMon.hpp \
+ ../Core/Inc/uTopics.hpp ../Core/Inc/LPF.hpp ../Core/Inc/BatteryMon.hpp \
  ../Core/Inc/Console.hpp ../Core/Inc/sys_cmnds.hpp \
  ../Core/Inc/Command.hpp ../Core/Inc/Telem_out.hpp \
+ ../Core/Inc/BaroMagDriver.hpp ../Core/Inc/I2CWrapper.hpp \
  ../Core/Inc/uTopics.hpp
 
 ../Core/Inc/main.h:
@@ -156,6 +157,8 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
 
 ../Core/Inc/uTopics.hpp:
 
+../Core/Inc/LPF.hpp:
+
 ../Core/Inc/BatteryMon.hpp:
 
 ../Core/Inc/Console.hpp:
@@ -165,5 +168,9 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
 ../Core/Inc/Command.hpp:
 
 ../Core/Inc/Telem_out.hpp:
+
+../Core/Inc/BaroMagDriver.hpp:
+
+../Core/Inc/I2CWrapper.hpp:
 
 ../Core/Inc/uTopics.hpp:

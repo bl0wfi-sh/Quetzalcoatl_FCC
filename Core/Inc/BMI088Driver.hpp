@@ -12,6 +12,7 @@
 #include "Task.hpp"
 #include "main.h"
 #include "uTopics.hpp"
+#include "LPF.hpp"
 
 #define BMI088_ACC_ADDRESS          0x18
 
@@ -200,7 +201,14 @@ private:
 
 	FMPI2C_HandleTypeDef* i2c;
 
+	// Low pass filters.
+	LPF lpfs[6];	// gx, gy, gz, ax, ay, az
+
+	// Data storage!
 	imu_msg_struct* imu_msg_pntr = &sys_imu_topic;
+
+	// Console flags
+	bool filter_on = true;
 };
 
 

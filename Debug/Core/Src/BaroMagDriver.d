@@ -1,6 +1,5 @@
-Core/Src/BMI088Driver.o: ../Core/Src/BMI088Driver.cpp \
- ../Core/Inc/BMI088Driver.hpp ../Core/Inc/Task.hpp \
- ../Core/Inc/cnsl_tools.hpp ../Core/Inc/main.h \
+Core/Src/BaroMagDriver.o: ../Core/Src/BaroMagDriver.cpp \
+ ../Core/Inc/BaroMagDriver.hpp ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -41,13 +40,10 @@ Core/Src/BMI088Driver.o: ../Core/Src/BMI088Driver.cpp \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_fmpi2c.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_fmpi2c_ex.h \
- ../Core/Inc/uTopics.hpp ../Core/Inc/LPF.hpp
+ ../Core/Inc/Task.hpp ../Core/Inc/cnsl_tools.hpp \
+ ../Core/Inc/I2CWrapper.hpp
 
-../Core/Inc/BMI088Driver.hpp:
-
-../Core/Inc/Task.hpp:
-
-../Core/Inc/cnsl_tools.hpp:
+../Core/Inc/BaroMagDriver.hpp:
 
 ../Core/Inc/main.h:
 
@@ -131,6 +127,8 @@ Core/Src/BMI088Driver.o: ../Core/Src/BMI088Driver.cpp \
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_fmpi2c_ex.h:
 
-../Core/Inc/uTopics.hpp:
+../Core/Inc/Task.hpp:
 
-../Core/Inc/LPF.hpp:
+../Core/Inc/cnsl_tools.hpp:
+
+../Core/Inc/I2CWrapper.hpp:

@@ -14,7 +14,7 @@ TelemOut::TelemOut(float delay_s, float peri_s, float mstr_tick_s, char pri, std
 		pri,
 		nm)
 {
-	enabled = true;
+	enabled = false;
 }
 TelemOut::~TelemOut()
 {
@@ -69,6 +69,7 @@ bool TelemOut::consoleFunca()
 	println("\tArgs");
 	println("\t* on - Turn telemetry out on.");
 	println("\t* off - Turn telemetry out off.");
+	println("\t* status - Show status.");
 	return true;
 }
 bool TelemOut::consoleFuncb(std::string& s)
@@ -80,6 +81,9 @@ bool TelemOut::consoleFuncb(std::string& s)
 
 	}else if (s == "off") {
 		enabled = false;
+	}else if (s == "status")
+	{
+		println("Telemetry Out Status - " + std::to_string(enabled));
 	}else{
 		println("Invalid parameter!");
 		consoleFunca();

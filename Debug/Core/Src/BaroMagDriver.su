@@ -1,0 +1,29 @@
+gthr-default.h:229:1:int __gthread_key_delete(__gthread_key_t)	16	static
+cnsl_tools.hpp:80:13:void startUART()	8	static
+cnsl_tools.hpp:86:13:void println(std::string)	32	static
+cnsl_tools.hpp:98:13:void print(std::string)	32	static
+cnsl_tools.hpp:107:20:std::string bfrspc(std::string)	24	static
+cnsl_tools.hpp:118:20:std::string aftspc(std::string)	40	static
+Task.hpp:56:15:virtual bool Task::taskFunction()	16	static
+Task.hpp:62:15:virtual bool Task::consoleFunca()	48	static
+Task.hpp:68:15:virtual bool Task::consoleFuncb(std::string&)	48	static
+I2CWrapper.hpp:18:2:I2CWrapper::I2CWrapper()	16	static
+I2CWrapper.hpp:32:7:void I2CWrapper::init(I2C_HandleTypeDef*)	16	static
+I2CWrapper.hpp:38:7:void I2CWrapper::setDevAdd(uint16_t)	16	static
+BaroMagDriver.cpp:10:1:DPS310::DPS310()	16	static
+BaroMagDriver.cpp:16:1:DPS310::~DPS310()	16	static
+BaroMagDriver.cpp:21:6:bool DPS310::init(I2C_HandleTypeDef*)	16	static
+BaroMagDriver.cpp:67:6:void DPS310::setMRatePRS(uint8_t)	24	static
+BaroMagDriver.cpp:78:6:void DPS310::setOSRatePRS(uint8_t)	24	static
+BaroMagDriver.cpp:92:6:void DPS310::setMRateTMP(uint8_t)	24	static
+BaroMagDriver.cpp:103:6:void DPS310::setOSRateTMP(uint8_t)	24	static
+BaroMagDriver.cpp:113:6:void DPS310::setTMPSource(uint8_t)	24	static
+BaroMagDriver.cpp:127:6:void DPS310::setOperationMode(uint8_t)	24	static
+BaroMagDriver.cpp:142:6:void DPS310::setFifoCnfgBit(uint8_t, uint8_t)	24	static
+BaroMagDriver.cpp:162:6:void DPS310::setCoefSrc(uint8_t)	24	static
+Task.hpp:14:7:Task::~Task()	16	static
+BaroMagDriver.cpp:180:1:BaroMag::BaroMag(float, float, float, char, std::string)	64	static
+BaroMagDriver.cpp:191:1:BaroMag::~BaroMag()	16	static
+BaroMagDriver.cpp:194:1:void __static_initialization_and_destruction_0(int, int)	24	static
+BaroMagDriver.cpp:194:1:cpp)	8	static
+BaroMagDriver.cpp:194:1:cpp)	8	static

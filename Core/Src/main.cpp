@@ -30,6 +30,7 @@
 #include "BatteryMon.hpp"
 #include "Console.hpp"
 #include "Telem_out.hpp"
+#include "BaroMagDriver.hpp"
 #include "uTopics.hpp"
 /* USER CODE END Includes */
 
@@ -65,6 +66,15 @@ DMA_HandleTypeDef hdma_usart1_rx;
 
 /* USER CODE BEGIN PV */
 
+struct I2C_Module
+{
+  I2C_HandleTypeDef   instance;
+  uint16_t            sdaPin;
+  GPIO_TypeDef*       sdaPort;
+  uint16_t            sclPin;
+  GPIO_TypeDef*       sclPort;
+};
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -82,6 +92,7 @@ static void MX_DMA_Init(void);
 static void MX_TIM5_Init(void);
 /* USER CODE BEGIN PFP */
 
+void I2C_ClearBusyFlagErratum(struct I2C_Module* i2c);
 
 // Printf() function calls will be serviced by USB interface.
 extern "C" int _write(int file, char *ptr, int len) {
@@ -138,6 +149,17 @@ int main(void)
   MX_TIM5_Init();
   /* USER CODE BEGIN 2 */
 
+  // Clear busy flag from Erratum.
+  /*
+  I2C_Module tmp_i2c;
+  tmp_i2c.instance = hi2c3;
+  tmp_i2c.sdaPin = GPIO_PIN_9;
+  tmp_i2c.sdaPort = GPIOC;
+  tmp_i2c.sclPin = GPIO_PIN_8;
+  tmp_i2c.sclPort = GPIOA;
+  I2C_ClearBusyFlagErratum(&tmp_i2c);
+  */
+
   // Give the scheduler its timer object.
   scheduler.init(&htim5);					// Timer 5 setup to interrupt every .01ms, 100 ticks = 1ms.
 
@@ -160,8 +182,17 @@ int main(void)
   scheduler.push_back( &bmon );
 
   // Adding Telemetry Out process...
-  TelemOut to(0.0f, 0.01f, .00001f, 0, "telem_out");	// 100Hz
+  TelemOut to(0.0f, 0.0025f, .00001f, 0, "telem_out");	// 400Hz
   scheduler.push_back( &to );
+
+  //BaroMag Task
+  /* Baro is installed incorrectly on boards.
+  BaroMag baro(0.0f, 0.25f, .00001f, 0, "Baro");		// 4Hz
+  if ( !baro.init(&hi2c3) )
+  {
+	  printf("Failed to init DPS310, verify its connected!\r\n");
+  }
+  */
 
   scheduler.start();
 
@@ -312,7 +343,7 @@ static void MX_FMPI2C1_Init(void)
 	*/
 	if (HAL_FMPI2CEx_ConfigAnalogFilter(&hfmpi2c1, FMPI2C_ANALOGFILTER_ENABLE) != HAL_OK)
 	{
-	Error_Handler();
+		Error_Handler();
 	}
 	/* USER CODE BEGIN FMPI2C1_Init 2 */
 
@@ -328,29 +359,29 @@ static void MX_FMPI2C1_Init(void)
 static void MX_I2C3_Init(void)
 {
 
-  /* USER CODE BEGIN I2C3_Init 0 */
+	/* USER CODE BEGIN I2C3_Init 0 */
 
-  /* USER CODE END I2C3_Init 0 */
+	/* USER CODE END I2C3_Init 0 */
 
-  /* USER CODE BEGIN I2C3_Init 1 */
+	/* USER CODE BEGIN I2C3_Init 1 */
 
-  /* USER CODE END I2C3_Init 1 */
-  hi2c3.Instance = I2C3;
-  hi2c3.Init.ClockSpeed = 100000;
-  hi2c3.Init.DutyCycle = I2C_DUTYCYCLE_2;
-  hi2c3.Init.OwnAddress1 = 0;
-  hi2c3.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-  hi2c3.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
-  hi2c3.Init.OwnAddress2 = 0;
-  hi2c3.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
-  hi2c3.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
-  if (HAL_I2C_Init(&hi2c3) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN I2C3_Init 2 */
+	/* USER CODE END I2C3_Init 1 */
+	hi2c3.Instance = I2C3;
+	hi2c3.Init.ClockSpeed = 400000;
+	hi2c3.Init.DutyCycle = I2C_DUTYCYCLE_2;
+	hi2c3.Init.OwnAddress1 = 0;
+	hi2c3.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+	hi2c3.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+	hi2c3.Init.OwnAddress2 = 0;
+	hi2c3.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+	hi2c3.Init.NoStretchMode = I2C_NOSTRETCH_ENABLE;
+	if (HAL_I2C_Init(&hi2c3) != HAL_OK)
+	{
+		Error_Handler();
+	}
+	/* USER CODE BEGIN I2C3_Init 2 */
 
-  /* USER CODE END I2C3_Init 2 */
+	/* USER CODE END I2C3_Init 2 */
 
 }
 
@@ -621,6 +652,102 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+void I2C_ClearBusyFlagErratum(struct I2C_Module* i2c)
+{
+  GPIO_InitTypeDef GPIO_InitStructure;
+
+  // 1. Clear PE bit.
+  i2c->instance.Instance->CR1 &= ~(0x0001);
+
+  //  2. Configure the SCL and SDA I/Os as General Purpose Output Open-Drain, High level (Write 1 to GPIOx_ODR).
+  GPIO_InitStructure.Mode         = GPIO_MODE_OUTPUT_OD;
+  GPIO_InitStructure.Alternate    = GPIO_AF4_I2C3;
+  GPIO_InitStructure.Pull         = GPIO_PULLUP;
+  GPIO_InitStructure.Speed        = GPIO_SPEED_FREQ_HIGH;
+
+  GPIO_InitStructure.Pin          = i2c->sclPin;
+  HAL_GPIO_Init(i2c->sclPort, &GPIO_InitStructure);
+  HAL_GPIO_WritePin(i2c->sclPort, i2c->sclPin, GPIO_PIN_SET);
+
+  GPIO_InitStructure.Pin          = i2c->sdaPin;
+  HAL_GPIO_Init(i2c->sdaPort, &GPIO_InitStructure);
+  HAL_GPIO_WritePin(i2c->sdaPort, i2c->sdaPin, GPIO_PIN_SET);
+
+  // 3. Check SCL and SDA High level in GPIOx_IDR.
+  while (GPIO_PIN_SET != HAL_GPIO_ReadPin(i2c->sclPort, i2c->sclPin))
+  {
+    asm("nop");
+  }
+
+  while (GPIO_PIN_SET != HAL_GPIO_ReadPin(i2c->sdaPort, i2c->sdaPin))
+  {
+    asm("nop");
+  }
+  // 4. Configure the SDA I/O as General Purpose Output Open-Drain, Low level (Write 0 to GPIOx_ODR).
+  HAL_GPIO_WritePin(i2c->sdaPort, i2c->sdaPin, GPIO_PIN_RESET);
+
+  //  5. Check SDA Low level in GPIOx_IDR.
+  while (GPIO_PIN_RESET != HAL_GPIO_ReadPin(i2c->sdaPort, i2c->sdaPin))
+  {
+    asm("nop");
+  }
+
+  // 6. Configure the SCL I/O as General Purpose Output Open-Drain, Low level (Write 0 to GPIOx_ODR).
+  HAL_GPIO_WritePin(i2c->sclPort, i2c->sclPin, GPIO_PIN_RESET);
+
+  //  7. Check SCL Low level in GPIOx_IDR.
+  while (GPIO_PIN_RESET != HAL_GPIO_ReadPin(i2c->sclPort, i2c->sclPin))
+  {
+    asm("nop");
+  }
+
+  // 8. Configure the SCL I/O as General Purpose Output Open-Drain, High level (Write 1 to GPIOx_ODR).
+  HAL_GPIO_WritePin(i2c->sclPort, i2c->sclPin, GPIO_PIN_SET);
+
+  // 9. Check SCL High level in GPIOx_IDR.
+  while (GPIO_PIN_SET != HAL_GPIO_ReadPin(i2c->sclPort, i2c->sclPin))
+  {
+    asm("nop");
+  }
+
+  // 10. Configure the SDA I/O as General Purpose Output Open-Drain , High level (Write 1 to GPIOx_ODR).
+  HAL_GPIO_WritePin(i2c->sdaPort, i2c->sdaPin, GPIO_PIN_SET);
+
+  // 11. Check SDA High level in GPIOx_IDR.
+  while (GPIO_PIN_SET != HAL_GPIO_ReadPin(i2c->sdaPort, i2c->sdaPin))
+  {
+    asm("nop");
+  }
+
+  // 12. Configure the SCL and SDA I/Os as Alternate function Open-Drain.
+  GPIO_InitStructure.Mode         = GPIO_MODE_AF_OD;
+  GPIO_InitStructure.Alternate    = GPIO_AF4_I2C3;
+
+  GPIO_InitStructure.Pin          = i2c->sclPin;
+  HAL_GPIO_Init(i2c->sclPort, &GPIO_InitStructure);
+
+  GPIO_InitStructure.Pin          = i2c->sdaPin;
+  HAL_GPIO_Init(i2c->sdaPort, &GPIO_InitStructure);
+
+  // 13. Set SWRST bit in I2Cx_CR1 register.
+  i2c->instance.Instance->CR1 |= 0x8000;
+
+  asm("nop");
+
+  // 14. Clear SWRST bit in I2Cx_CR1 register.
+  i2c->instance.Instance->CR1 &= ~0x8000;
+
+  asm("nop");
+
+  // 15. Enable the I2C peripheral by setting the PE bit in I2Cx_CR1 register
+  i2c->instance.Instance->CR1 |= 0x0001;
+
+  // Call initialization function.
+  HAL_I2C_Init(&(i2c->instance));
+}
+
+
 
 /* USER CODE END 4 */
 

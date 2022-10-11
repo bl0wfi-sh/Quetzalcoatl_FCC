@@ -18,6 +18,16 @@ BMI088::BMI088(float delay_s, float peri_s, float mstr_tick_s, char pri, std::st
 	gcal_x = 0;
 	gcal_y = 0;
 	gcal_z = 0;
+
+	// Initialize low pass filters.
+	// Default = 35Hz for gyros, 45Hz accels.
+	lpfs[0].setCutOff(35.0f, peri_s);
+	lpfs[1].setCutOff(35.0f, peri_s);
+	lpfs[2].setCutOff(35.0f, peri_s);
+
+	lpfs[3].setCutOff(45.0f, peri_s);
+	lpfs[4].setCutOff(45.0f, peri_s);
+	lpfs[5].setCutOff(45.0f, peri_s);
 }
 
 bool BMI088::consoleFunca()
@@ -27,6 +37,8 @@ bool BMI088::consoleFunca()
 	println("Read BMI088 accel, gyro, and temp data @ 800Hz.");
 	println("\tArgs");
 	println("\t* status - Show most recent accel, gyro, and temp data.");
+	println("\t* filter_on - Turn data filter on.");
+	println("\t* filter_off - Turn data filter off.");
 	return true;
 }
 
@@ -38,6 +50,13 @@ bool BMI088::consoleFuncb(std::string& s)
 
 		if (!imu_msg_pntr->locked)
 		{
+			println("BMI088 Filter Status - " + std::to_string(filter_on));
+			println("BMI088 Filter (Hz) [Gyro, Accel]");
+			println("BMI088 Filters - " +
+					std::to_string(lpfs[0].getCutoff()) + ", " +
+					std::to_string(lpfs[3].getCutoff())
+					);
+
 			println("BMI088 Units - [rads, m/s^2, C]");
 			println("BMI088 Frmt  - [gx, gy, gz, ax, ay, az, temp]");
 			println("BMI088 Data  - " +
@@ -47,10 +66,19 @@ bool BMI088::consoleFuncb(std::string& s)
 					std::to_string(imu_msg_pntr->ax) + " " +
 					std::to_string(imu_msg_pntr->ay) + " " +
 					std::to_string(imu_msg_pntr->az) + " " +
-					std::to_string(imu_msg_pntr->temp));
+					std::to_string(imu_msg_pntr->temp)
+					);
 		}else{
 			println("Shared memory locked!");
 		}
+
+	}else if (s == "filter_on"){
+
+		filter_on = true;
+
+	}else if (s == "filter_off"){
+
+		filter_on = false;
 
 	}else{
 		println("Invalid parameter!");
@@ -63,9 +91,36 @@ bool BMI088::consoleFuncb(std::string& s)
 
 bool BMI088::taskFunction()
 {
+	float gy[3] = {0};
+	float ax[3] = {0};
+
+	getGyroscope(gy, gy + 1, gy + 2);
+	getAcceleration(ax, ax + 1, ax + 2);
+
 	imu_msg_pntr->locked = true;			// Lock the shared memory while writting to it.
-	getGyroscope(imu_msg_pntr->gyros, imu_msg_pntr->gyros + 1, imu_msg_pntr->gyros + 2);
-	getAcceleration(imu_msg_pntr->accels, imu_msg_pntr->accels + 1, imu_msg_pntr->accels + 2);
+
+	if (filter_on)
+	{
+		// Low pass filter gyro data.
+		imu_msg_pntr->gx = lpfs[0].filter(gy[0]);
+		imu_msg_pntr->gy = lpfs[1].filter(gy[1]);
+		imu_msg_pntr->gz = lpfs[2].filter(gy[2]);
+
+		// Low pass filter accel data.
+		imu_msg_pntr->ax = lpfs[3].filter(ax[0]);
+		imu_msg_pntr->ay = lpfs[4].filter(ax[1]);
+		imu_msg_pntr->az = lpfs[5].filter(ax[2]);
+	}else{
+		imu_msg_pntr->gx = gy[0];
+		imu_msg_pntr->gy = gy[1];
+		imu_msg_pntr->gz = gy[2];
+
+		// Low pass filter accel data.
+		imu_msg_pntr->ax = ax[0];
+		imu_msg_pntr->ay = ax[1];
+		imu_msg_pntr->az = ax[2];
+	}
+
 	imu_msg_pntr->temp = getTemperature();
 	imu_msg_pntr->locked = false;			// Un-lock the shared memory while writting to it.
 	return true;

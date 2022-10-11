@@ -6,39 +6,44 @@ cnsl_tools.hpp:86:13:void println(std::string)	32	static
 cnsl_tools.hpp:98:13:void print(std::string)	32	static
 cnsl_tools.hpp:107:20:std::string bfrspc(std::string)	24	static
 cnsl_tools.hpp:118:20:std::string aftspc(std::string)	40	static
+cmath:222:3:constexpr float std::exp(float)	16	static
+LPF.hpp:16:2:LPF::LPF()	16	static
+LPF.hpp:30:8:float LPF::filter(float)	16	static
+LPF.hpp:37:7:void LPF::setCutOff(float, float)	24	static
+LPF.hpp:45:8:float LPF::getCutoff()	16	static
 BMI088Driver.cpp:9:1:BMI088::BMI088(float, float, float, char, std::string)	64	static
-BMI088Driver.cpp:23:6:virtual bool BMI088::consoleFunca()	128	static
-BMI088Driver.cpp:33:6:virtual bool BMI088::consoleFuncb(std::string&)	608	static
-BMI088Driver.cpp:64:6:virtual bool BMI088::taskFunction()	16	static
-BMI088Driver.cpp:74:6:bool BMI088::initialize(FMPI2C_HandleTypeDef*)	16	static
-BMI088Driver.cpp:95:6:void BMI088::calibrateGyro(int)	48	static
-BMI088Driver.cpp:109:6:bool BMI088::isConnection()	16	static
-BMI088Driver.cpp:113:6:void BMI088::resetAcc()	16	static
-BMI088Driver.cpp:117:6:void BMI088::resetGyro()	16	static
-BMI088Driver.cpp:121:9:uint8_t BMI088::getAccID()	16	static
-BMI088Driver.cpp:125:9:uint8_t BMI088::getGyroID()	16	static
-BMI088Driver.cpp:129:6:void BMI088::setAccPoweMode(acc_power_type_t)	16	static
-BMI088Driver.cpp:139:6:void BMI088::setGyroPoweMode(gyro_power_type_t)	16	static
-BMI088Driver.cpp:149:6:void BMI088::setAccScaleRange(acc_scale_type_t)	16	static
-BMI088Driver.cpp:163:6:void BMI088::setAccOutputDataRate(acc_odr_type_t)	24	static
-BMI088Driver.cpp:173:6:void BMI088::setAccLowPassFilterBandwidth(acc_bwp_type_t)	24	static
-BMI088Driver.cpp:184:6:void BMI088::setGyroScaleRange(gyro_scale_type_t)	16	static
-BMI088Driver.cpp:200:6:void BMI088::setGyroOutputDataRate(gyro_odr_type_t)	16	static
-BMI088Driver.cpp:204:6:void BMI088::getAcceleration(float*, float*, float*)	56	static
-BMI088Driver.cpp:225:7:float BMI088::getAccelerationX()	24	static
-BMI088Driver.cpp:237:7:float BMI088::getAccelerationY()	24	static
-BMI088Driver.cpp:249:7:float BMI088::getAccelerationZ()	24	static
-BMI088Driver.cpp:261:6:void BMI088::getGyroscope(float*, float*, float*)	56	static
-BMI088Driver.cpp:282:7:float BMI088::getGyroscopeX()	24	static
-BMI088Driver.cpp:294:7:float BMI088::getGyroscopeY()	24	static
-BMI088Driver.cpp:306:7:float BMI088::getGyroscopeZ()	24	static
-BMI088Driver.cpp:318:9:int16_t BMI088::getTemperature()	24	static
-BMI088Driver.cpp:331:6:void BMI088::write8(device_type_t, uint8_t, uint8_t)	40	static
-BMI088Driver.cpp:343:9:uint8_t BMI088::read8(device_type_t, uint8_t)	40	static
-BMI088Driver.cpp:361:10:uint16_t BMI088::read16(device_type_t, uint8_t)	40	static
-BMI088Driver.cpp:376:10:uint16_t BMI088::read16Be(device_type_t, uint8_t)	40	static
-BMI088Driver.cpp:391:10:uint32_t BMI088::read24(device_type_t, uint8_t)	40	static
-BMI088Driver.cpp:406:6:void BMI088::read(device_type_t, uint8_t, uint8_t*, uint16_t)	48	static
+BMI088Driver.cpp:33:6:virtual bool BMI088::consoleFunca()	184	static
+BMI088Driver.cpp:45:6:virtual bool BMI088::consoleFuncb(std::string&)	808	static
+BMI088Driver.cpp:92:6:virtual bool BMI088::taskFunction()	48	static
+BMI088Driver.cpp:129:6:bool BMI088::initialize(FMPI2C_HandleTypeDef*)	16	static
+BMI088Driver.cpp:150:6:void BMI088::calibrateGyro(int)	48	static
+BMI088Driver.cpp:164:6:bool BMI088::isConnection()	16	static
+BMI088Driver.cpp:168:6:void BMI088::resetAcc()	16	static
+BMI088Driver.cpp:172:6:void BMI088::resetGyro()	16	static
+BMI088Driver.cpp:176:9:uint8_t BMI088::getAccID()	16	static
+BMI088Driver.cpp:180:9:uint8_t BMI088::getGyroID()	16	static
+BMI088Driver.cpp:184:6:void BMI088::setAccPoweMode(acc_power_type_t)	16	static
+BMI088Driver.cpp:194:6:void BMI088::setGyroPoweMode(gyro_power_type_t)	16	static
+BMI088Driver.cpp:204:6:void BMI088::setAccScaleRange(acc_scale_type_t)	16	static
+BMI088Driver.cpp:218:6:void BMI088::setAccOutputDataRate(acc_odr_type_t)	24	static
+BMI088Driver.cpp:228:6:void BMI088::setAccLowPassFilterBandwidth(acc_bwp_type_t)	24	static
+BMI088Driver.cpp:239:6:void BMI088::setGyroScaleRange(gyro_scale_type_t)	16	static
+BMI088Driver.cpp:255:6:void BMI088::setGyroOutputDataRate(gyro_odr_type_t)	16	static
+BMI088Driver.cpp:259:6:void BMI088::getAcceleration(float*, float*, float*)	56	static
+BMI088Driver.cpp:280:7:float BMI088::getAccelerationX()	24	static
+BMI088Driver.cpp:292:7:float BMI088::getAccelerationY()	24	static
+BMI088Driver.cpp:304:7:float BMI088::getAccelerationZ()	24	static
+BMI088Driver.cpp:316:6:void BMI088::getGyroscope(float*, float*, float*)	56	static
+BMI088Driver.cpp:337:7:float BMI088::getGyroscopeX()	24	static
+BMI088Driver.cpp:349:7:float BMI088::getGyroscopeY()	24	static
+BMI088Driver.cpp:361:7:float BMI088::getGyroscopeZ()	24	static
+BMI088Driver.cpp:373:9:int16_t BMI088::getTemperature()	24	static
+BMI088Driver.cpp:386:6:void BMI088::write8(device_type_t, uint8_t, uint8_t)	40	static
+BMI088Driver.cpp:398:9:uint8_t BMI088::read8(device_type_t, uint8_t)	40	static
+BMI088Driver.cpp:416:10:uint16_t BMI088::read16(device_type_t, uint8_t)	40	static
+BMI088Driver.cpp:431:10:uint16_t BMI088::read16Be(device_type_t, uint8_t)	40	static
+BMI088Driver.cpp:446:10:uint32_t BMI088::read24(device_type_t, uint8_t)	40	static
+BMI088Driver.cpp:461:6:void BMI088::read(device_type_t, uint8_t, uint8_t*, uint16_t)	48	static
 string_conversions.h:99:5:) [with _String = std::__cxx11::basic_string<char>; _CharT = char]	44	dynamic
 basic_string.h:6175:5:bool std::operator==(const std::__cxx11::basic_string<_CharT, _Traits, _Alloc>&, const _CharT*) [with _CharT = char; _Traits = std::char_traits<char>; _Alloc = std::allocator<char>]	16	static
 basic_string.h:6109:5:std::__cxx11::basic_string<_CharT, _Traits, _Alloc> std::operator+(const _CharT*, std::__cxx11::basic_string<_CharT, _Traits, _Alloc>&&) [with _CharT = char; _Traits = std::char_traits<char>; _Alloc = std::allocator<char>]	24	static
@@ -53,6 +58,6 @@ type_traits.h:152:5:bool __gnu_cxx::__is_null_pointer(_Type*) [with _Type = char
 stl_iterator_base_funcs.h:138:5:typename std::iterator_traits<_Iterator>::difference_type std::distance(_InputIterator, _InputIterator) [with _InputIterator = char*]	32	static
 stl_iterator_base_types.h:205:5:constexpr typename std::iterator_traits<_Iterator>::iterator_category std::__iterator_category(const _Iter&) [with _Iter = char*]	16	static
 stl_iterator_base_funcs.h:98:5:constexpr typename std::iterator_traits<_Iterator>::difference_type std::__distance(_RandomAccessIterator, _RandomAccessIterator, std::random_access_iterator_tag) [with _RandomAccessIterator = char*]	24	static
-BMI088Driver.cpp:416:1:void __static_initialization_and_destruction_0(int, int)	24	static
-BMI088Driver.cpp:416:1:cpp)	8	static
-BMI088Driver.cpp:416:1:cpp)	8	static
+BMI088Driver.cpp:471:1:void __static_initialization_and_destruction_0(int, int)	24	static
+BMI088Driver.cpp:471:1:cpp)	8	static
+BMI088Driver.cpp:471:1:cpp)	8	static
